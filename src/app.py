@@ -4,10 +4,16 @@ from decimal import Decimal
 
 from fastapi import FastAPI
 
+from uuid import UUID
+
 from src.adjudication.adapters.api import router as adjudication_router
 from src.claims.adapters.api import router as claims_router
+from src.claims.application.event_handlers import EmployerNotifiedHandler
+from src.claims.application.handle_employer_timeout import HandleEmployerTimeoutUseCase
+from src.claims.domain.events import EmployerNotified
 from src.payments.domain.benefit_config import BenefitConfig
 from src.shared.in_memory_event_bus import InMemoryEventBus
+from src.shared.in_memory_scheduler import InMemoryScheduler
 from tests.fakes.fake_case_repository import FakeAdjudicationCaseRepository
 from tests.fakes.fake_claim_repository import FakeClaimRepository
 from tests.fakes.fake_payment_gateway import FakePaymentGateway
@@ -30,7 +36,19 @@ def create_app() -> FastAPI:
     # Pre-seed wage data for test SSNs
     wage_gateway.set_wages("123-45-6789", [Decimal("10000")] * 4)
 
+    # Wire EmployerNotified → scheduler → HandleEmployerTimeout
+    scheduler = InMemoryScheduler()
+    employer_notified_handler = EmployerNotifiedHandler(scheduler)
+    event_bus.subscribe(EmployerNotified, employer_notified_handler.handle)
+
+    timeout_uc = HandleEmployerTimeoutUseCase(claim_repo, event_bus)
+    scheduler.on(
+        "EmployerResponseDeadline",
+        lambda payload: timeout_uc.execute(UUID(payload["claim_id"])),
+    )
+
     # Store dependencies on app state for access in route handlers
+    app.state.scheduler = scheduler
     app.state.event_bus = event_bus
     app.state.claim_repo = claim_repo
     app.state.case_repo = case_repo
