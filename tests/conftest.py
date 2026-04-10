@@ -51,16 +51,23 @@ def benefit_config():
     return BenefitConfig(state_ceiling=Decimal("1200.00"))
 
 
-def make_claim(**overrides) -> Claim:
-    defaults = dict(
-        claim_id=uuid4(),
-        employee_ssn="123-45-6789",
-        employer_fein="12-3456789",
-        leave_type=LeaveType.BONDING,
-        leave_start_date=datetime(2026, 5, 1),
-        leave_end_date=datetime(2026, 7, 24),
-        status=ClaimStatus.SUBMITTED,
-        submitted_at=datetime(2026, 4, 15),
+def make_claim(
+    claim_id=None,
+    employee_ssn="123-45-6789",
+    employer_fein="12-3456789",
+    leave_type=LeaveType.BONDING,
+    leave_start_date=None,
+    leave_end_date=None,
+    status=ClaimStatus.SUBMITTED,
+    submitted_at=None,
+) -> Claim:
+    return Claim(
+        claim_id=claim_id or uuid4(),
+        employee_ssn=employee_ssn,
+        employer_fein=employer_fein,
+        leave_type=leave_type,
+        leave_start_date=leave_start_date or datetime(2026, 5, 1),
+        leave_end_date=leave_end_date or datetime(2026, 7, 24),
+        status=status,
+        submitted_at=submitted_at or datetime(2026, 4, 15),
     )
-    defaults.update(overrides)
-    return Claim(**defaults)

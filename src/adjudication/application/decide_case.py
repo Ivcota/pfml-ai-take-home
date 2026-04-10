@@ -15,6 +15,8 @@ class DecideAdjudicationUseCase:
 
     def execute(self, case_id: UUID, decision: CaseDecision, notes: str) -> None:
         case = self._case_repo.get_by_id(case_id)
+        if case is None:
+            raise ValueError(f"Adjudication case {case_id} not found")
         case.begin_review()
         case.decide(decision, notes)
         self._case_repo.save(case)

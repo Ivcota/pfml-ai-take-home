@@ -18,6 +18,8 @@ class RecordEmployerResponseUseCase:
         self, claim_id: UUID, decision: EmployerDecision, reason: str | None = None
     ) -> None:
         claim = self._claim_repo.get_by_id(claim_id)
+        if claim is None:
+            raise ValueError(f"Claim {claim_id} not found")
         claim.record_employer_response(
             EmployerResponse(decision=decision, responded_at=datetime.now(), reason=reason)
         )

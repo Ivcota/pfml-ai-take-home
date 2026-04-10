@@ -7,22 +7,29 @@ from src.payments.domain.payment_method import PaymentMethod, PaymentType
 from src.payments.domain.payment_schedule import PaymentSchedule
 
 
-def make_schedule(**overrides) -> PaymentSchedule:
-    defaults = dict(
-        schedule_id=uuid4(),
-        claim_id=uuid4(),
-        weekly_benefit_amount=Decimal("800.00"),
-        payment_method=PaymentMethod(
+def make_schedule(
+    schedule_id=None,
+    claim_id=None,
+    weekly_benefit_amount=Decimal("800.00"),
+    payment_method=None,
+    start_date=None,
+    end_date=None,
+    created_at=None,
+) -> PaymentSchedule:
+    return PaymentSchedule(
+        schedule_id=schedule_id or uuid4(),
+        claim_id=claim_id or uuid4(),
+        weekly_benefit_amount=weekly_benefit_amount,
+        payment_method=payment_method
+        or PaymentMethod(
             type=PaymentType.DIRECT_DEPOSIT,
             bank_routing_number="021000021",
             bank_account_number="123456789",
         ),
-        start_date=datetime(2026, 5, 5),
-        end_date=datetime(2026, 7, 20),  # ~11 weeks
-        created_at=datetime(2026, 5, 1),
+        start_date=start_date or datetime(2026, 5, 5),
+        end_date=end_date or datetime(2026, 7, 20),
+        created_at=created_at or datetime(2026, 5, 1),
     )
-    defaults.update(overrides)
-    return PaymentSchedule(**defaults)
 
 
 class TestPaymentScheduleGeneration:

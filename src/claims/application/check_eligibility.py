@@ -25,6 +25,8 @@ class CheckEligibilityUseCase:
 
     def execute(self, claim_id: UUID) -> None:
         claim = self._claim_repo.get_by_id(claim_id)
+        if claim is None:
+            raise ValueError(f"Claim {claim_id} not found")
         claim.begin_eligibility_check()
 
         quarterly_wages = self._wage_gateway.get_quarterly_wages(claim.employee_ssn, 4)
@@ -45,11 +47,11 @@ class CheckEligibilityUseCase:
                 )
             )
         else:
-            claim.deny(result.reason)
+            claim.deny(result.reason or "ineligible")
             self._claim_repo.save(claim)
             self._event_bus.publish(
                 ClaimDenied(
                     claim_id=claim.claim_id,
-                    denial_reason=result.reason,
+                    denial_reason=result.reason or "ineligible",
                 )
             )

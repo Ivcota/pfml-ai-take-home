@@ -7,4 +7,4 @@ def calculate_weekly_benefit(quarterly_wages: list[Decimal], state_ceiling: Deci
     """min(avg_quarterly_wages / 13, state_ceiling)"""
     avg_quarterly = sum(quarterly_wages) / len(quarterly_wages)
     weekly = avg_quarterly / 13
-    return min(weekly, state_ceiling)
+    return Decimal(min(weekly, state_ceiling))

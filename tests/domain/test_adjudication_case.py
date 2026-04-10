@@ -10,16 +10,20 @@ from src.adjudication.domain.adjudication_case import (
 )
 
 
-def make_case(**overrides) -> AdjudicationCase:
-    defaults = dict(
-        case_id=uuid4(),
-        claim_id=uuid4(),
-        escalation_reason="employer objection",
-        status=CaseStatus.PENDING,
-        created_at=datetime(2026, 5, 1),
+def make_case(
+    case_id=None,
+    claim_id=None,
+    escalation_reason="employer objection",
+    status=CaseStatus.PENDING,
+    created_at=None,
+) -> AdjudicationCase:
+    return AdjudicationCase(
+        case_id=case_id or uuid4(),
+        claim_id=claim_id or uuid4(),
+        escalation_reason=escalation_reason,
+        status=status,
+        created_at=created_at or datetime(2026, 5, 1),
     )
-    defaults.update(overrides)
-    return AdjudicationCase(**defaults)
 
 
 class TestAdjudicationCaseTransitions:

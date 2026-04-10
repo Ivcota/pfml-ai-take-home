@@ -14,6 +14,10 @@ test-v:
 lint:
     uv run ruff check src tests
 
+# Type check
+typecheck:
+    uv run pyright src tests
+
 # Lint and fix
 lint-fix:
     uv run ruff check --fix src tests

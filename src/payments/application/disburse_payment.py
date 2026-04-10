@@ -21,6 +21,8 @@ class DisbursePaymentUseCase:
 
     def execute(self, schedule_id: UUID, payment_id: UUID) -> None:
         schedule = self._schedule_repo.get_by_id(schedule_id)
+        if schedule is None:
+            raise ValueError(f"Payment schedule {schedule_id} not found")
         payment = next(p for p in schedule.payments if p.payment_id == payment_id)
 
         payment.mark_processing()
@@ -29,7 +31,7 @@ class DisbursePaymentUseCase:
         )
 
         if result.success:
-            payment.mark_disbursed(result.reference)
+            payment.mark_disbursed(result.reference or "")
             self._schedule_repo.save(schedule)
             self._event_bus.publish(
                 PaymentDisbursed(
@@ -45,6 +47,6 @@ class DisbursePaymentUseCase:
                 PaymentFailed(
                     payment_id=payment.payment_id,
                     schedule_id=schedule.schedule_id,
-                    reason=result.error,
+                    reason=result.error or "unknown error",
                 )
             )

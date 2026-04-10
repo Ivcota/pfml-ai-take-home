@@ -16,6 +16,8 @@ class HandleEmployerTimeoutUseCase:
 
     def execute(self, claim_id: UUID) -> None:
         claim = self._claim_repo.get_by_id(claim_id)
+        if claim is None:
+            raise ValueError(f"Claim {claim_id} not found")
         claim.record_employer_response(
             EmployerResponse(decision=EmployerDecision.WINDOW_EXPIRED, responded_at=datetime.now())
         )

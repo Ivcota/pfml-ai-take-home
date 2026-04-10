@@ -14,6 +14,8 @@ class ApplyAdjudicationResultUseCase:
 
     def execute(self, claim_id: UUID, decision: str) -> None:
         claim = self._claim_repo.get_by_id(claim_id)
+        if claim is None:
+            raise ValueError(f"Claim {claim_id} not found")
 
         if decision == "APPROVED":
             claim.approve()

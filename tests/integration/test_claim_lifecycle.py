@@ -101,6 +101,7 @@ class TestHappyPath:
         system.record_employer_response.execute(claim_id, EmployerDecision.NO_OBJECTION)
 
         claim = system.claim_repo.get_by_id(claim_id)
+        assert claim is not None
         assert claim.status == ClaimStatus.APPROVED
 
         schedule = system.schedule_repo.get_by_claim_id(claim_id)
@@ -131,6 +132,7 @@ class TestEscalationPath:
         system.decide_adjudication.execute(case.case_id, CaseDecision.APPROVED, "dates verified")
 
         claim = system.claim_repo.get_by_id(claim_id)
+        assert claim is not None
         assert claim.status == ClaimStatus.APPROVED
 
         schedule = system.schedule_repo.get_by_claim_id(claim_id)
@@ -147,6 +149,7 @@ class TestDenialPaths:
         system.check_eligibility.execute(claim_id)
 
         claim = system.claim_repo.get_by_id(claim_id)
+        assert claim is not None
         assert claim.status == ClaimStatus.DENIED
 
         assert system.schedule_repo.get_by_claim_id(claim_id) is None
@@ -161,9 +164,11 @@ class TestDenialPaths:
         )
 
         case = system.case_repo.get_by_claim_id(claim_id)
+        assert case is not None
         system.decide_adjudication.execute(case.case_id, CaseDecision.DENIED, "claim is fraudulent")
 
         claim = system.claim_repo.get_by_id(claim_id)
+        assert claim is not None
         assert claim.status == ClaimStatus.DENIED
 
         assert system.schedule_repo.get_by_claim_id(claim_id) is None
