@@ -6,30 +6,27 @@ from decimal import Decimal
 
 import pytest
 
-from src.shared.in_memory_event_bus import InMemoryEventBus
-from tests.fakes.fake_claim_repository import FakeClaimRepository
-from tests.fakes.fake_case_repository import FakeAdjudicationCaseRepository
-from tests.fakes.fake_schedule_repository import FakePaymentScheduleRepository
-from tests.fakes.fake_wage_gateway import FakeWageReportingGateway
-
-from src.claims.domain.claim import LeaveType, ClaimStatus
-from src.claims.domain.employer_response import EmployerDecision
-from src.claims.domain.events import ClaimApproved, ClaimEscalated
-from src.adjudication.domain.adjudication_case import CaseDecision
-from src.adjudication.domain.events import AdjudicationCompleted
-from src.payments.domain.benefit_config import BenefitConfig
-
-from src.claims.application.submit_claim import SubmitClaimUseCase
-from src.claims.application.check_eligibility import CheckEligibilityUseCase
-from src.claims.application.record_employer_response import RecordEmployerResponseUseCase
-from src.claims.application.apply_adjudication_result import ApplyAdjudicationResultUseCase
 from src.adjudication.application.create_case import CreateAdjudicationCaseUseCase
 from src.adjudication.application.decide_case import DecideAdjudicationUseCase
-from src.payments.application.create_payment_schedule import CreatePaymentScheduleUseCase
-
 from src.adjudication.application.event_handlers import ClaimEscalatedHandler
+from src.adjudication.domain.adjudication_case import CaseDecision
+from src.adjudication.domain.events import AdjudicationCompleted
+from src.claims.application.apply_adjudication_result import ApplyAdjudicationResultUseCase
+from src.claims.application.check_eligibility import CheckEligibilityUseCase
 from src.claims.application.event_handlers import AdjudicationCompletedHandler
+from src.claims.application.record_employer_response import RecordEmployerResponseUseCase
+from src.claims.application.submit_claim import SubmitClaimUseCase
+from src.claims.domain.claim import ClaimStatus, LeaveType
+from src.claims.domain.employer_response import EmployerDecision
+from src.claims.domain.events import ClaimApproved, ClaimEscalated
+from src.payments.application.create_payment_schedule import CreatePaymentScheduleUseCase
 from src.payments.application.event_handlers import ClaimApprovedHandler
+from src.payments.domain.benefit_config import BenefitConfig
+from src.shared.in_memory_event_bus import InMemoryEventBus
+from tests.fakes.fake_case_repository import FakeAdjudicationCaseRepository
+from tests.fakes.fake_claim_repository import FakeClaimRepository
+from tests.fakes.fake_schedule_repository import FakePaymentScheduleRepository
+from tests.fakes.fake_wage_gateway import FakeWageReportingGateway
 
 
 @dataclass
@@ -115,7 +112,9 @@ class TestHappyPath:
 
 
 class TestEscalationPath:
-    def test_escalated_claim_approved_by_adjudicator_creates_payment_schedule(self, system: WiredSystem):
+    def test_escalated_claim_approved_by_adjudicator_creates_payment_schedule(
+        self, system: WiredSystem
+    ):
         system.wage_gateway.set_wages(SSN, QUARTERLY_WAGES)
 
         claim_id = system.submit_claim.execute(SSN, FEIN, LeaveType.BONDING, START, END)

@@ -6,8 +6,8 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from src.adjudication.domain.adjudication_case import AdjudicationCase, CaseDecision, CaseStatus
 from src.adjudication.application.decide_case import DecideAdjudicationUseCase
+from src.adjudication.domain.adjudication_case import AdjudicationCase, CaseDecision, CaseStatus
 
 router = APIRouter(prefix="/adjudication/cases", tags=["adjudication"])
 

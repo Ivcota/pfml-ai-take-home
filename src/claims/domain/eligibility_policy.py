@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
-
 MAX_LEAVE_WEEKS_PER_YEAR = 20
 
 

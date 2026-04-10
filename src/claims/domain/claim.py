@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -10,12 +10,12 @@ from src.claims.domain.document import Document
 from src.claims.domain.employer_response import EmployerResponse
 
 
-class LeaveType(str, Enum):
+class LeaveType(StrEnum):
     BONDING = "BONDING"
     MEDICAL = "MEDICAL"
 
 
-class ClaimStatus(str, Enum):
+class ClaimStatus(StrEnum):
     SUBMITTED = "SUBMITTED"
     ELIGIBILITY_CHECK = "ELIGIBILITY_CHECK"
     AWAITING_EMPLOYER = "AWAITING_EMPLOYER"

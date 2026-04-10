@@ -1,10 +1,11 @@
-import pytest
 from datetime import datetime
 from uuid import uuid4
 
-from src.claims.domain.claim import Claim, ClaimStatus, LeaveType
-from src.claims.domain.employer_response import EmployerResponse, EmployerDecision
+import pytest
+
+from src.claims.domain.claim import ClaimStatus
 from src.claims.domain.document import Document, DocumentType
+from src.claims.domain.employer_response import EmployerDecision, EmployerResponse
 from tests.conftest import make_claim
 
 

@@ -9,3 +9,11 @@ test:
 # Run tests with verbose output
 test-v:
     uv run pytest -v
+
+# Lint
+lint:
+    uv run ruff check src tests
+
+# Lint and fix
+lint-fix:
+    uv run ruff check --fix src tests

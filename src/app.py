@@ -4,15 +4,15 @@ from decimal import Decimal
 
 from fastapi import FastAPI
 
-from src.claims.adapters.api import router as claims_router
 from src.adjudication.adapters.api import router as adjudication_router
+from src.claims.adapters.api import router as claims_router
+from src.payments.domain.benefit_config import BenefitConfig
 from src.shared.in_memory_event_bus import InMemoryEventBus
-from tests.fakes.fake_claim_repository import FakeClaimRepository
 from tests.fakes.fake_case_repository import FakeAdjudicationCaseRepository
+from tests.fakes.fake_claim_repository import FakeClaimRepository
+from tests.fakes.fake_payment_gateway import FakePaymentGateway
 from tests.fakes.fake_schedule_repository import FakePaymentScheduleRepository
 from tests.fakes.fake_wage_gateway import FakeWageReportingGateway
-from tests.fakes.fake_payment_gateway import FakePaymentGateway
-from src.payments.domain.benefit_config import BenefitConfig
 
 
 def create_app() -> FastAPI:

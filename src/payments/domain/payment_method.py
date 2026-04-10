@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel
 
 
-class PaymentType(str, Enum):
+class PaymentType(StrEnum):
     CHECK = "CHECK"
     DIRECT_DEPOSIT = "DIRECT_DEPOSIT"
 

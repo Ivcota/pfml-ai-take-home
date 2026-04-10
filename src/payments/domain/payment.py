@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
+from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel
 
 
-class PaymentStatus(str, Enum):
+class PaymentStatus(StrEnum):
     SCHEDULED = "SCHEDULED"
     PROCESSING = "PROCESSING"
     DISBURSED = "DISBURSED"

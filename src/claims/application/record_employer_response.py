@@ -14,7 +14,9 @@ class RecordEmployerResponseUseCase:
         self._claim_repo = claim_repo
         self._event_bus = event_bus
 
-    def execute(self, claim_id: UUID, decision: EmployerDecision, reason: str | None = None) -> None:
+    def execute(
+        self, claim_id: UUID, decision: EmployerDecision, reason: str | None = None
+    ) -> None:
         claim = self._claim_repo.get_by_id(claim_id)
         claim.record_employer_response(
             EmployerResponse(decision=decision, responded_at=datetime.now(), reason=reason)

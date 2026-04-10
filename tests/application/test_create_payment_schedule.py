@@ -13,9 +13,15 @@ class TestCreatePaymentSchedule:
     ):
         claim_id = uuid4()
         wage_gateway.set_wages("123-45-6789", [Decimal("10000")] * 4)
-        method = PaymentMethod(type=PaymentType.DIRECT_DEPOSIT, bank_routing_number="021000021", bank_account_number="123456789")
+        method = PaymentMethod(
+            type=PaymentType.DIRECT_DEPOSIT,
+            bank_routing_number="021000021",
+            bank_account_number="123456789",
+        )
 
-        use_case = CreatePaymentScheduleUseCase(schedule_repo, wage_gateway, benefit_config, event_bus)
+        use_case = CreatePaymentScheduleUseCase(
+            schedule_repo, wage_gateway, benefit_config, event_bus
+        )
         schedule_id = use_case.execute(
             claim_id=claim_id,
             employee_ssn="123-45-6789",
@@ -36,7 +42,9 @@ class TestCreatePaymentSchedule:
         wage_gateway.set_wages("123-45-6789", [Decimal("50000")] * 4)
         method = PaymentMethod(type=PaymentType.CHECK, mailing_address="123 Main St")
 
-        use_case = CreatePaymentScheduleUseCase(schedule_repo, wage_gateway, benefit_config, event_bus)
+        use_case = CreatePaymentScheduleUseCase(
+            schedule_repo, wage_gateway, benefit_config, event_bus
+        )
         schedule_id = use_case.execute(
             claim_id=claim_id,
             employee_ssn="123-45-6789",
@@ -53,9 +61,15 @@ class TestCreatePaymentSchedule:
     ):
         claim_id = uuid4()
         wage_gateway.set_wages("123-45-6789", [Decimal("10000")] * 4)
-        method = PaymentMethod(type=PaymentType.DIRECT_DEPOSIT, bank_routing_number="021000021", bank_account_number="123456789")
+        method = PaymentMethod(
+            type=PaymentType.DIRECT_DEPOSIT,
+            bank_routing_number="021000021",
+            bank_account_number="123456789",
+        )
 
-        use_case = CreatePaymentScheduleUseCase(schedule_repo, wage_gateway, benefit_config, event_bus)
+        use_case = CreatePaymentScheduleUseCase(
+            schedule_repo, wage_gateway, benefit_config, event_bus
+        )
         schedule_id = use_case.execute(
             claim_id=claim_id,
             employee_ssn="123-45-6789",

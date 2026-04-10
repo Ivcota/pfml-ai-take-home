@@ -1,18 +1,19 @@
 from __future__ import annotations
 
-import pytest
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
 from uuid import uuid4
 
+import pytest
+
+from src.claims.domain.claim import Claim, ClaimStatus, LeaveType
+from src.payments.domain.benefit_config import BenefitConfig
 from src.shared.in_memory_event_bus import InMemoryEventBus
-from tests.fakes.fake_claim_repository import FakeClaimRepository
 from tests.fakes.fake_case_repository import FakeAdjudicationCaseRepository
+from tests.fakes.fake_claim_repository import FakeClaimRepository
+from tests.fakes.fake_payment_gateway import FakePaymentGateway
 from tests.fakes.fake_schedule_repository import FakePaymentScheduleRepository
 from tests.fakes.fake_wage_gateway import FakeWageReportingGateway
-from tests.fakes.fake_payment_gateway import FakePaymentGateway
-from src.claims.domain.claim import Claim, LeaveType, ClaimStatus
-from src.payments.domain.benefit_config import BenefitConfig
 
 
 @pytest.fixture

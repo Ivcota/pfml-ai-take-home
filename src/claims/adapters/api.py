@@ -6,9 +6,9 @@ from uuid import UUID
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from src.claims.application.submit_claim import SubmitClaimUseCase
 from src.claims.application.check_eligibility import CheckEligibilityUseCase
 from src.claims.application.record_employer_response import RecordEmployerResponseUseCase
+from src.claims.application.submit_claim import SubmitClaimUseCase
 from src.claims.domain.claim import LeaveType
 from src.claims.domain.employer_response import EmployerDecision
 from src.payments.domain.payment_method import PaymentMethod
@@ -57,6 +57,8 @@ def upload_document(claim_id: str):
 
 @router.post("/{claim_id}/employer-response")
 def record_employer_response(claim_id: UUID, body: EmployerResponseRequest, request: Request):
-    use_case = RecordEmployerResponseUseCase(request.app.state.claim_repo, request.app.state.event_bus)
+    use_case = RecordEmployerResponseUseCase(
+        request.app.state.claim_repo, request.app.state.event_bus
+    )
     use_case.execute(claim_id, body.decision, body.reason)
     return {"status": "ok"}

@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel
 
 
-class CaseStatus(str, Enum):
+class CaseStatus(StrEnum):
     PENDING = "PENDING"
     IN_REVIEW = "IN_REVIEW"
     COMPLETED = "COMPLETED"
 
 
-class CaseDecision(str, Enum):
+class CaseDecision(StrEnum):
     APPROVED = "APPROVED"
     DENIED = "DENIED"
 

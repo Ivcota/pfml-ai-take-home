@@ -1,9 +1,8 @@
 from decimal import Decimal
-from uuid import uuid4
 
 from src.claims.application.check_eligibility import CheckEligibilityUseCase
 from src.claims.domain.claim import ClaimStatus
-from src.claims.domain.events import EmployerNotified, ClaimDenied
+from src.claims.domain.events import ClaimDenied, EmployerNotified
 from tests.conftest import make_claim
 
 

@@ -3,10 +3,10 @@ from decimal import Decimal
 from uuid import uuid4
 
 from src.payments.application.disburse_payment import DisbursePaymentUseCase
+from src.payments.domain.events import PaymentDisbursed, PaymentFailed
 from src.payments.domain.payment import Payment, PaymentStatus
 from src.payments.domain.payment_method import PaymentMethod, PaymentType
 from src.payments.domain.payment_schedule import PaymentSchedule
-from src.payments.domain.events import PaymentDisbursed, PaymentFailed
 
 
 def make_schedule_with_payment(payment_status=PaymentStatus.SCHEDULED):
@@ -15,7 +15,11 @@ def make_schedule_with_payment(payment_status=PaymentStatus.SCHEDULED):
         schedule_id=uuid4(),
         claim_id=uuid4(),
         weekly_benefit_amount=Decimal("800.00"),
-        payment_method=PaymentMethod(type=PaymentType.DIRECT_DEPOSIT, bank_routing_number="021000021", bank_account_number="123456789"),
+        payment_method=PaymentMethod(
+            type=PaymentType.DIRECT_DEPOSIT,
+            bank_routing_number="021000021",
+            bank_account_number="123456789",
+        ),
         start_date=datetime(2026, 5, 5),
         end_date=datetime(2026, 5, 12),
         payments=[

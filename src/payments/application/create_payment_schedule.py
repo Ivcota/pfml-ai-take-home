@@ -32,11 +32,14 @@ class CreatePaymentScheduleUseCase:
         end_date: datetime,
     ) -> UUID:
         from uuid import uuid4
+
         from src.payments.domain.benefit_calculator import calculate_weekly_benefit
         from src.payments.domain.payment_schedule import PaymentSchedule
 
         quarterly_wages = self._wage_gateway.get_quarterly_wages(employee_ssn, 4)
-        weekly_benefit = calculate_weekly_benefit(quarterly_wages, self._benefit_config.state_ceiling)
+        weekly_benefit = calculate_weekly_benefit(
+            quarterly_wages, self._benefit_config.state_ceiling
+        )
 
         schedule = PaymentSchedule(
             schedule_id=uuid4(),
