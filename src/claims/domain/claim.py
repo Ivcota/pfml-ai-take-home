@@ -39,22 +39,34 @@ class Claim(BaseModel):
     updated_at: datetime | None = None
 
     def begin_eligibility_check(self) -> None:
-        raise NotImplementedError
+        self._require_status(ClaimStatus.SUBMITTED)
+        self.status = ClaimStatus.ELIGIBILITY_CHECK
 
     def mark_awaiting_employer(self) -> None:
-        raise NotImplementedError
+        self._require_status(ClaimStatus.ELIGIBILITY_CHECK)
+        self.status = ClaimStatus.AWAITING_EMPLOYER
 
     def approve(self) -> None:
-        raise NotImplementedError
+        self._require_status(ClaimStatus.AWAITING_EMPLOYER, ClaimStatus.ESCALATED)
+        self.status = ClaimStatus.APPROVED
 
     def deny(self, reason: str) -> None:
-        raise NotImplementedError
+        self._require_status(ClaimStatus.ELIGIBILITY_CHECK, ClaimStatus.ESCALATED)
+        self.status = ClaimStatus.DENIED
+        self.denial_reason = reason
 
     def escalate(self) -> None:
-        raise NotImplementedError
+        self._require_status(ClaimStatus.AWAITING_EMPLOYER)
+        self.status = ClaimStatus.ESCALATED
 
     def record_employer_response(self, response: EmployerResponse) -> None:
-        raise NotImplementedError
+        self.employer_response = response
 
     def attach_document(self, document: Document) -> None:
-        raise NotImplementedError
+        self.documents.append(document)
+
+    def _require_status(self, *allowed: ClaimStatus) -> None:
+        if self.status not in allowed:
+            raise ValueError(
+                f"Cannot transition from {self.status}; expected one of {allowed}"
+            )

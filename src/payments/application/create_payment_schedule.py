@@ -31,4 +31,22 @@ class CreatePaymentScheduleUseCase:
         start_date: datetime,
         end_date: datetime,
     ) -> UUID:
-        raise NotImplementedError
+        from uuid import uuid4
+        from src.payments.domain.benefit_calculator import calculate_weekly_benefit
+        from src.payments.domain.payment_schedule import PaymentSchedule
+
+        quarterly_wages = self._wage_gateway.get_quarterly_wages(employee_ssn, 4)
+        weekly_benefit = calculate_weekly_benefit(quarterly_wages, self._benefit_config.state_ceiling)
+
+        schedule = PaymentSchedule(
+            schedule_id=uuid4(),
+            claim_id=claim_id,
+            weekly_benefit_amount=weekly_benefit,
+            payment_method=payment_method,
+            start_date=start_date,
+            end_date=end_date,
+            created_at=datetime.now(),
+        )
+        schedule.generate_payments()
+        self._schedule_repo.save(schedule)
+        return schedule.schedule_id

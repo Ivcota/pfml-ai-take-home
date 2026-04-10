@@ -17,4 +17,11 @@ def check_eligibility(
     quarterly_wages: list[Decimal],
     weeks_used_this_year: int,
 ) -> EligibilityResult:
-    raise NotImplementedError
+    if weeks_used_this_year >= MAX_LEAVE_WEEKS_PER_YEAR:
+        return EligibilityResult(eligible=False, reason="annual leave exhausted")
+
+    has_qualifying_wages = any(w > 0 for w in quarterly_wages)
+    if not has_qualifying_wages:
+        return EligibilityResult(eligible=False, reason="no qualifying wages")
+
+    return EligibilityResult(eligible=True)

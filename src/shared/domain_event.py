@@ -9,5 +9,5 @@ from pydantic import BaseModel, Field
 class DomainEvent(BaseModel):
     model_config = {"frozen": True}
 
-    event_id: UUID
+    event_id: UUID = Field(default_factory=lambda: __import__("uuid").uuid4())
     occurred_at: datetime = Field(default_factory=datetime.utcnow)

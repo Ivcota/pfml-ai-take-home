@@ -24,10 +24,12 @@ class Payment(BaseModel):
     gateway_reference: str | None = None
 
     def mark_processing(self) -> None:
-        raise NotImplementedError
+        self.status = PaymentStatus.PROCESSING
 
     def mark_disbursed(self, gateway_reference: str) -> None:
-        raise NotImplementedError
+        self.status = PaymentStatus.DISBURSED
+        self.disbursed_at = datetime.now()
+        self.gateway_reference = gateway_reference
 
     def mark_failed(self) -> None:
-        raise NotImplementedError
+        self.status = PaymentStatus.FAILED

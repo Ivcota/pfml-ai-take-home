@@ -29,7 +29,14 @@ class AdjudicationCase(BaseModel):
     created_at: datetime | None = None
 
     def begin_review(self) -> None:
-        raise NotImplementedError
+        if self.status != CaseStatus.PENDING:
+            raise ValueError(f"Cannot begin review from {self.status}")
+        self.status = CaseStatus.IN_REVIEW
 
     def decide(self, decision: CaseDecision, notes: str) -> None:
-        raise NotImplementedError
+        if self.status != CaseStatus.IN_REVIEW:
+            raise ValueError(f"Cannot decide from {self.status}")
+        self.status = CaseStatus.COMPLETED
+        self.decision = decision
+        self.adjudicator_notes = notes
+        self.decided_at = datetime.now()
